@@ -123,7 +123,78 @@ xLoad和xStore是分类型的(几乎所有的类型都是分类型的).
 * DUP 栈顶值复制一份,push入栈.
 * SWAP pop两个值,交换他们顺序之后再push入栈
 
+##### Constants 常量命令
+这些命令将一个常量值压入操作栈中.
 
+1. ACONST_NULL push null
+2. ICONST_0 push int值0
+3. FCONST_0 push 0f
+4. DCONST_0 push 0d
+5. BIPUSH b push byte值b
+6. SIPUSH s push short值 s
+7. LDC cst push 任意的int,float,long,double,String,class常量.
+
+##### Methods 命令
+* 压入多个值作为参数阐述,加一个作为目标对象的值,并且方法结果入栈.
+
+#### 3.1.4 异常处理器
+
+### 3.2 接口和组件
+用来生成和转换方法的ASM API是基于MethodVisitor抽象类,这个类由ClassVisitor的visitMethod方法返回.
+
+1. visitCode和visitMaxs方法是发现方法体的开始和结束事件.
+2. visitEnd最后调用,表明方法的结束.
+
+#### ASM 提供了3个核心组件来完成方法的生成和转换
+* ClassReader类解析编译方法的内容,调用MethodVisitor对象的对应方法.(这个对象是由ClassReader的accept方法接收的ClassVisitor返回的)
+* ClassWriter的visitMethod方法返回MethodVisitor的实现.直接用二进制的形式构建方法.
+* MethodVisitor类代理所有的从别的MethodVisitor实例获得的方法请求,它可以被看做事件过滤器.
+
+#### ClassWriter选项
+桢和本地变量数计算
+
+* ClassWriter(0),所有的都自己算
+* ClassWriter(ClassWriter.COMPUTE_MAXS):本地变量数和操作栈部分自动计算.
+* ClassWriter(ClassWriter.COMPUTE_FRAMES):所有的都是自动计算.
+
+自动计算有性能消耗, ClassWriter.COMPUTE_MAXS会导致慢10%, ClassWriter.COMPUTE_FRAMES会导致慢一倍.
+
+#### 3.2.2 生成方法
+#### 3.2.3 转换方法
+#### 3.2.4 无状态的转换
+#### 3.2.5 有状态的转换(就是依赖之前指令)
+### 3.3 工具
+org.objectweb.asm.commmons包预定义了一些方法适配器帮助你定义自己的适配器.
+#### 3.3.1 基础工具
+2.3章节的工具也能用在啊方法上.
+#### 3.3.2 AnalyzerAdapter
+在每个命令前计算栈对应的桢.
+#### 3.3.4 AdviceAdapter
+在方法开始处和return以及ATHROW命令前插入代码.
+
+## 4. 元数据
+这一章主要说的是如果用core API来啊生成和转化安Java 类元数据,例如注解.
+
+### 4.1 泛型
+#### 4.1.1 结构
+出于兼容性的考虑,泛型没有保存在类或方法描述符中.而是在signatures中.
+
+### 4.2 注解
+#### 4.2.1 结构
+注解有相同的格式,并且通过一个注解类型和一系列名值对来规定,值在下面的范围内
+
+* 基础数据类型,Class或者String值
+* 枚举
+* 注解
+* 上面类型的数组.
+
+注解可能包含其他注解,甚至是注解数组.
+
+#### 4.2.2 ASM中对应接口和组件.
+AnnotationVisitor抽象类.
+#### 4.3 调试
+
+## 5. 兼容
 
 
 
