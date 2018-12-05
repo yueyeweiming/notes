@@ -18,4 +18,8 @@ ClasNode也有一个accept方法,接受ClassVisitor(ClassReader).
 
 ## 7. 方法
 ### 7.1 接口和组件
-MethodNode
+MethodNode类.最重要的field是instructions,它是一组命令列表,InsnList对象.
+
+
+
+
